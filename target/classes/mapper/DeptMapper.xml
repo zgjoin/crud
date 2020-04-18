@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhuguangjie.dao.IDeptDAO">
+    <resultMap id="deptResultMap" type="Dept">
+        <id column="deptno" property="deptNo"/>
+        <result column="dname" property="dName"/>
+        <result column="loc" property="loc"/>
+        <collection property="emp" column="empno" javaType="java.util.Set" ofType="com.zhuguangjie.pojo.Emp">
+            <id column="ename" property="eName"/>
+            <result column="job" property="job"/>
+            <result column="mgr" property="mgr"/>
+            <result column="hiredate" property="hiredate"/>
+            <result column="sal" property="sal"/>
+            <result column="comm" property="comm"/>
+        </collection>
+    </resultMap>
+    <select id="findAllDept" resultMap="deptResultMap">
+        select * from dept;
+    </select>
+    <delete id="deleteDeptById" parameterType="Long">
+        delete from dept where deptno=#{deptNo};
+    </delete>
+    <select id="findDeptById" parameterType="Long" resultType="Dept">
+        select * from dept where deptno=#{deptNo};
+    </select>
+    <update id="updateDept" parameterType="Dept">
+        update dept set dname=#{dName},loc=#{loc} where deptno=#{deptNo};
+    </update>
+    <insert id="addDept" parameterType="Dept">
+        insert into dept(deptno,dname,loc) values (#{deptNo},#{dName}, #{loc});
+    </insert>
+
+</mapper>

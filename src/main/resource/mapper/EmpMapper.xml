@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhuguangjie.dao.IEmpDAO">
+    <resultMap id="empmap" type="Emp">
+        <id column="EMPNO" property="empNo"/>
+        <result column="ENAME" property="eName"/>
+        <result column="JOB" property="job"/>
+        <result column="MGR" property="mgr"/>
+        <result column="HIREDATE" property="hiredate"/>
+        <result column="SAL" property="sal"/>
+        <result column="COMM" property="comm"/>
+        <!--<result column="deptno" property="deptNo"/>-->
+        <!--映射外键字段，该标签的column属性不是列别名而是表外键字段列名-->
+        <association property="dept" column="DEPTNO" javaType="com.zhuguangjie.pojo.Dept">
+            <id column="DEPTNO" property="deptNo"/>
+            <result column="DNAME" property="dName"/>
+            <result column="LOC" property="loc"/>
+        </association>
+    </resultMap>
+    <select id="findAllEmp" resultMap="empmap">
+        select * from emp;
+    </select>
+    <select id="findEmpByPage" resultMap="empmap">
+        select * from emp;
+    </select>
+    <select id="findEmpByDeptNO" resultMap="empmap" parameterType="Long">
+        select * from emp where deptno=#{deptNo};
+    </select>
+    <select id="findEmpByDept" resultMap="empmap" parameterType="Long">
+        select * from emp where deptno=#{deptNo};
+    </select>
+    <delete id="deleteEmpByNo" parameterType="Long">
+        delete from emp where empno=#{empNo};
+    </delete>
+    <update id="updateEmp" parameterType="Long">
+        update emp set ename=#{eName},job=#{job},mgr=#{mgr},hiredate=#{hiredate},sal=#{sal},comm=#{comm},deptno=#{deptNo} where empno=#{empNo};
+    </update>
+    <select id="findEmpById" parameterType="Long" resultType="Emp" resultMap="empmap">/*要指定resultMap，否则查找时查询的结果会不全*/
+        select
+         e.empNo empno,
+         e.eName ename,
+         e.job job,
+         e.mgr mgr,
+         e.hiredate hiredate,
+         e.sal sal,
+         e.comm comm,
+         d.deptNo deptno,
+         d.dName dname,
+         d.loc loc
+         from emp e left outer join dept d on e.deptNo=d.deptNo
+         where empno=#{empNo};
+    </select>
+    <insert id="addEmp" parameterType="Emp">
+        insert into emp(empno,ename,job,mgr,hiredate,sal,comm,deptno) values(#{empNo},#{eName},#{job},#{mgr},#{hiredate},#{sal},#{comm},#{deptNo});
+    </insert>
+</mapper>
